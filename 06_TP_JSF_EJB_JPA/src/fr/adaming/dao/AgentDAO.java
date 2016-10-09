@@ -1,66 +1,42 @@
 package fr.adaming.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import fr.adaming.util.DbUtilitaire;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
+import fr.adaming.model.Agent;
+
+
+@Stateless
 public class AgentDAO implements IAgentDAO{
+
+	@PersistenceContext(unitName="PU")
+	EntityManager em;
 	
-	 private Connection connection;
-	/**
-    *
-    * @param login
-    * @param mdp
-    * @return
-    */
-   @Override
-   public int isExist(String login, String mdp) {
+	
 
-       PreparedStatement ps = null;
-
-       try {
-           connection = DbUtilitaire.getConnection();
-
-           //verif de l'existence de l'utilisateur
-           String existReq = "SELECT COUNT(id) "
-                   + " FROM agents "
-                   + " WHERE mail=? AND password=?";
-           ps = connection.prepareStatement(existReq);
-           ps.setString(1, login);
-           ps.setString(2, mdp);
-
-           ResultSet result = ps.executeQuery();
-           result.next();
-
-//           ps.close();
-//           connection.close();
-           
-       System.out.println("resultatDao :"+result.getInt(1));   
-           return result.getInt(1);
-
-       } catch (SQLException ex) {
-           System.out.println("je suis dans l'exception : " );
-           ex.printStackTrace();
-       } finally {
-  //         try {
-//              
-//               if (connection != null) {
-//                   connection.close();
-//                   if (ps != null) {
-//                       ps.close();
-//                   }
-//               }
-//           } catch (SQLException ex) {
-//               Logger.getLogger(UtilisateurDAO.class.getName()).log(Level.SEVERE, null, ex);
-//
-//           }
-
-       }
-       return 0;
-   }
+	@Override
+	public int isExist(String mail, String mdp) {
+		System.out.println("--------------------------je suis dans la couche dao\n");
+//		String req="SELECT COUNT(a.id) "
+//                + " FROM agents a"
+//                + " WHERE a.mail="+mail;
+//		Query query=em.createNativeQuery(req,Agent.class);
+		Agent a=null;
+		
+	a=(Agent) em.find(Agent.class, 1);
+		System.out.println(a);
+		if (a!=null){
+			System.out.println("______________________________ on a trouvé un utilisateur____________________");
+			return 1;
+			
+		}else{
+			System.out.println("\n______________________________ on n'a pas trouvé un utilisateur____________________");
+			return 0;
+		}
+	}
+	
+	
 }

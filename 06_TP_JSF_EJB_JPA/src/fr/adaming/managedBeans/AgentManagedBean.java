@@ -3,16 +3,15 @@ package fr.adaming.managedBeans;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import fr.adaming.dao.AgentDAO;
+
 import fr.adaming.dao.IAgentDAO;
 import fr.adaming.dao.IUtilisateurDAO;
-import fr.adaming.dao.UtilisateurDAO;
 import fr.adaming.model.Utilisateur;
 
 @ManagedBean(name="agentMB")
@@ -29,8 +28,11 @@ public class AgentManagedBean implements Serializable {
 	private List<Utilisateur> liste;
 
 
-	IUtilisateurDAO userDao=new UtilisateurDAO();
-	IAgentDAO agentDao=new AgentDAO();
+	@EJB
+	private IUtilisateurDAO userDao;
+	
+	@EJB
+	private IAgentDAO agentDao;
 	
 
 	public AgentManagedBean() {
@@ -87,6 +89,28 @@ public class AgentManagedBean implements Serializable {
 		return "accueil";
 		
 	}
+
+
+	public IUtilisateurDAO getUserDao() {
+		return userDao;
+	}
+
+
+	public void setUserDao(IUtilisateurDAO userDao) {
+		this.userDao = userDao;
+	}
+
+
+	public IAgentDAO getAgentDao() {
+		return agentDao;
+	}
+
+
+	public void setAgentDao(IAgentDAO agentDao) {
+		this.agentDao = agentDao;
+	}
+	
+	
 	
 
 }
